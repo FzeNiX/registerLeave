@@ -120,11 +120,11 @@ async function api(params) {
   return r.json();
 }
 
+// ✅ MỚI — không có custom header, không preflight, pass CORS
 async function apiPost(body) {
   const r = await fetch(API, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body)  // body vẫn là JSON string
   });
   return r.json();
 }
