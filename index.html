@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMT Vietnam — Leave Registration</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f4f0; --bg3: #eeecea;
+    --text: #1a1a1a; --text2: #666; --text3: #999;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --green-bg: #EAF3DE; --green-text: #3B6D11; --green-bd: #97C459;
+    --red-bg: #FCEBEB;   --red-text: #A32D2D;   --red-bd: #F09595;
+    --blue-bg: #E6F1FB;  --blue-text: #185FA5;
+    --amber-bg: #FAEEDA; --amber-text: #854F0B;
+    --radius: 12px; --radius-sm: 8px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e; --bg2: #2a2a2a; --bg3: #323232;
+      --text: #f0f0f0; --text2: #aaa; --text3: #777;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+    }
+  }
+  body { font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.6; background: var(--bg3); color: var(--text); min-height: 100vh; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+  .header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+  .logo { width: 42px; height: 42px; border-radius: 50%; background: var(--blue-bg); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; color: var(--blue-text); flex-shrink: 0; }
+  .header-info p:first-child { font-size: 16px; font-weight: 500; }
+  .header-info p:last-child { font-size: 12px; color: var(--text2); }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 5px; font-weight: 500; }
+  .b-ok { background: var(--green-bg); color: var(--green-text); }
+  .b-no { background: var(--red-bg); color: var(--red-text); }
+  .b-pd { background: var(--amber-bg); color: var(--amber-text); }
+  .b-if { background: var(--blue-bg); color: var(--blue-text); }
+  .tabs { display: flex; border-bottom: 0.5px solid var(--border2); margin-bottom: 20px; }
+  .tbtn { padding: 8px 20px; font-size: 14px; cursor: pointer; border: none; background: none; color: var(--text2); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; }
+  .tbtn.act { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 14px; }
+  .grid2 { display: grid; grid-template-columns: minmax(0,2fr) minmax(0,1fr); gap: 16px; align-items: start; }
+  .grid2cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .fg { margin-bottom: 14px; }
+  .fg label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 4px; }
+  .fg label.req::after { content: ' *'; color: #E24B4A; }
+  input[type=text], input[type=email], input[type=number], select, textarea {
+    width: 100%; padding: 7px 10px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+    background: var(--bg); color: var(--text); font-size: 14px; font-family: inherit;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--blue-text); border-color: transparent; }
+  textarea { resize: none; height: 60px; }
+  .chk-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; padding: 3px 0; }
+  .chk-list { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+  .infobox { background: var(--bg2); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px; }
+  .warn { font-size: 12px; color: #E24B4A; margin-top: 4px; }
+  button { padding: 8px 18px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); font-size: 14px; cursor: pointer; font-family: inherit; transition: background 0.12s; }
+  button:hover { background: var(--bg2); }
+  button.primary { background: var(--text); color: var(--bg); border-color: var(--text); width: 100%; font-weight: 500; padding: 10px; }
+  button.primary:hover { opacity: 0.85; }
+  .sbar-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+  .sbar { flex: 1; height: 3px; border-radius: 2px; background: var(--bg3); }
+  .sfill { height: 100%; border-radius: 2px; background: #1D9E75; transition: width 0.3s; }
+  .sfill.full { background: #E24B4A; }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  .met { background: var(--bg2); border-radius: var(--radius-sm); padding: 14px; }
+  .ml { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+  .mv { font-size: 22px; font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 8px 10px; background: var(--bg2); font-size: 12px; color: var(--text2); font-weight: 500; }
+  td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); }
+  .stitle { font-size: 14px; font-weight: 500; margin-bottom: 12px; }
+  .result-box { border-radius: var(--radius); padding: 28px; text-align: center; margin-bottom: 14px; }
+  .result-box.ok { background: var(--green-bg); border: 0.5px solid var(--green-bd); color: var(--green-text); }
+  .result-box.no { background: var(--red-bg); border: 0.5px solid var(--red-bd); color: var(--red-text); }
+  .result-icon { font-size: 30px; margin-bottom: 8px; }
+  .loading { text-align: center; padding: 40px; color: var(--text2); font-size: 14px; }
+  @media (max-width: 680px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo">A</div>
+    <div class="header-info">
+      <p>AMT Vietnam — Đăng ký nghỉ thêm</p>
+      <p>Dịp 30/4 – 1/5 · Ngày bổ sung: 28 & 29/4/2026</p>
+    </div>
+    <span class="badge b-ok" style="margin-left:auto">Đang mở đăng ký</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tbtn act" onclick="switchTab('form',this)">Đăng ký</button>
+    <button class="tbtn" onclick="switchTab('admin',this)">Admin</button>
+  </div>
+
+  <div id="form-view"></div>
+  <div id="admin-view" style="display:none"></div>
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────
+// Sau khi deploy Apps Script, dán URL vào đây:
+const API = 'https://script.google.com/macros/s/AKfycby6BAzQD2zWVHinZNKI2SCboMbwlKp21NUdSq89sDMjdo65f3R93u_tdLrXw2rxVwIQJA/exec';
+const ADMIN_SECRET = 'amt2026'; // phải khớp với ADMIN_SECRET trong Code.gs
+
+// ─── State ─────────────────────────────────────────────────────
+const S = {
+  tab: 'form', adminAuth: false, formStep: 'filling', lastResult: null,
+  slots: null, subs: null, quota: null,
+  fd: { name:'', email:'', office:'', role:'', days:[], prevLeave:0, prevWfh:0, notes:'', agreed:false }
+};
+
+// ─── API calls ─────────────────────────────────────────────────
+async function api(params) {
+  const url = API + '?' + new URLSearchParams(params);
+  const r = await fetch(url);
+  return r.json();
+}
+
+async function apiPost(body) {
+  const r = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return r.json();
+}
+
+// ─── Tab switch ─────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('act'));
+  btn.classList.add('act');
+  document.getElementById('form-view').style.display = tab === 'form' ? '' : 'none';
+  document.getElementById('admin-view').style.display = tab === 'admin' ? '' : 'none';
+  if (tab === 'admin') renderAdminGate();
+}
+
+// ─── Slots widget ───────────────────────────────────────────────
+async function loadSlots(office) {
+  if (!office) return '';
+  try {
+    const res = await api({ action: 'slots', office });
+    if (!res.ok) return '<p style="font-size:13px;color:var(--text2)">Không tải được slot.</p>';
+    const data = res.data[office];
+    let h = '';
+    ['Apr 28', 'Apr 29'].forEach(d => {
+      h += `<p style="font-size:12px;font-weight:500;color:var(--text2);margin:${d==='Apr 28'?0:10}px 0 4px">${d}</p>`;
+      [['seniors','Senior'],['juniors','Jr/Trainee']].forEach(([k,l]) => {
+        const { max, approved, remaining } = data[d][k];
+        const pct = max ? Math.round((approved/max)*100) : 0;
+        h += `<div class="sbar-row">
+          <span style="font-size:12px;color:var(--text2);min-width:80px">${l}</span>
+          <div class="sbar"><div class="sfill${remaining===0?' full':''}" style="width:${pct}%"></div></div>
+          <span style="font-size:12px;font-weight:500;min-width:55px;text-align:right;color:${remaining===0?'#E24B4A':'var(--text)'}">${remaining}/${max} còn</span>
+        </div>`;
+      });
+    });
+    return h;
+  } catch(e) {
+    return '<p style="font-size:13px;color:var(--text2)">Lỗi tải slot.</p>';
+  }
+}
+
+// ─── Form render ────────────────────────────────────────────────
+async function renderForm() {
+  const el = document.getElementById('form-view');
+  const f = S.fd;
+
+  if (S.formStep === 'submitted') {
+    const ok = S.lastResult.status === 'Approved';
+    el.innerHTML = `
+      <div class="result-box ${ok?'ok':'no'}">
+        <div class="result-icon">${ok?'✓':'✕'}</div>
+        <p style="font-size:16px;font-weight:500;margin-bottom:6px">${ok?'Đăng ký đã được duyệt':'Không được duyệt đợt này'}</p>
+        <p style="font-size:13px;opacity:0.85">${ok?'Xác nhận sẽ được gửi qua email của bạn.':S.lastResult.reason}</p>
+      </div>
+      <div style="text-align:center"><button onclick="resetForm()">Đăng ký mới</button></div>`;
+    return;
+  }
+
+  const show2 = f.days.length >= 2;
+  const slotHtml = f.office ? await loadSlots(f.office) : '<p style="font-size:13px;color:var(--text2)">Chọn văn phòng để xem slot.</p>';
+  const lp = Number(f.prevLeave) >= 3 || Number(f.prevWfh) >= 2;
+
+  el.innerHTML = `
+  <div class="grid2">
+    <div class="card">
+      <p class="stitle">Form đăng ký</p>
+      <div class="fg"><label class="req">Họ và tên</label><input type="text" id="f-name" value="${f.name}" placeholder="Nguyễn Văn A"></div>
+      <div class="fg"><label class="req">Email công ty</label><input type="email" id="f-email" value="${f.email}" placeholder="ten@amt.vn"></div>
+      <div class="grid2cols">
+        <div class="fg">
+          <label class="req">Văn phòng</label>
+          <select id="f-office" onchange="S.fd.office=this.value;renderForm()">
+            <option value="">Chọn</option>
+            <option value="HCM" ${f.office==='HCM'?'selected':''}>TP. Hồ Chí Minh</option>
+            <option value="HN" ${f.office==='HN'?'selected':''}>Hà Nội</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="req">Cấp bậc</label>
+          <select id="f-role">
+            <option value="">Chọn</option>
+            <option value="Senior Associate" ${f.role==='Senior Associate'?'selected':''}>Senior Associate</option>
+            <option value="Junior Associate" ${f.role==='Junior Associate'?'selected':''}>Junior Associate</option>
+            <option value="Trainee Associate" ${f.role==='Trainee Associate'?'selected':''}>Trainee Associate</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="req">Ngày nghỉ thêm đăng ký</label>
+        <div class="chk-list">
+          <label class="chk-item"><input type="checkbox" id="d28" ${f.days.includes('Apr 28')?'checked':''} onchange="toggleDay('Apr 28',this.checked)"> Thứ Hai, 28/4/2026</label>
+          <label class="chk-item"><input type="checkbox" id="d29" ${f.days.includes('Apr 29')?'checked':''} onchange="toggleDay('Apr 29',this.checked)"> Thứ Ba, 29/4/2026</label>
+        </div>
+      </div>
+      ${show2 ? `
+      <div class="infobox">
+        <p style="font-size:12px;font-weight:500;margin-bottom:8px;color:var(--text2)">Lịch sử kỳ nghỉ Tết Nguyên Đán 2026 (bắt buộc khi đăng ký 2 ngày)</p>
+        <div class="grid2cols">
+          <div class="fg"><label>Số ngày nghỉ thêm</label><input type="number" id="f-leave" min="0" max="20" value="${f.prevLeave}"></div>
+          <div class="fg"><label>Số ngày WFH</label><input type="number" id="f-wfh" min="0" max="20" value="${f.prevWfh}"></div>
+        </div>
+        ${lp ? '<p class="warn">⚠ Bạn có thể bị giảm ưu tiên trong đợt này do lịch sử Tết trước.</p>' : ''}
+      </div>` : ''}
+      <div class="fg"><label>Ghi chú (không bắt buộc)</label><textarea id="f-notes">${f.notes}</textarea></div>
+      <div class="fg"><label class="chk-item"><input type="checkbox" id="f-agreed" ${f.agreed?'checked':''}><span style="font-size:13px">Tôi đã đọc và hiểu quy định đăng ký nghỉ phép</span></label></div>
+      <button class="primary" onclick="submitForm()" id="btn-submit">Gửi đăng ký</button>
+    </div>
+    <div>
+      <div class="card"><p class="stitle">Slot còn lại · ${f.office||'—'}</p>${slotHtml}</div>
+      <div class="infobox">
+        <p style="font-size:12px;font-weight:500;margin-bottom:6px">Nguyên tắc xét duyệt</p>
+        <ul style="font-size:12px;color:var(--text2);padding-left:1rem;line-height:2">
+          <li>Tối đa 50% mỗi cấp bậc / văn phòng / ngày</li>
+          <li>1 ngày → first come, first served</li>
+          <li>2 ngày → kiểm tra lịch sử ưu tiên</li>
+          <li>Không WFH trong kỳ nghỉ này</li>
+          <li>Mỗi email chỉ đăng ký 1 lần</li>
+        </ul>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleDay(day, checked) {
+  S.fd.days = checked ? [...S.fd.days.filter(d => d !== day), day] : S.fd.days.filter(d => d !== day);
+  renderForm();
+}
+
+async function submitForm() {
+  // Collect latest values from DOM
+  S.fd.name      = document.getElementById('f-name')?.value.trim() || '';
+  S.fd.email     = document.getElementById('f-email')?.value.trim() || '';
+  S.fd.role      = document.getElementById('f-role')?.value || '';
+  S.fd.notes     = document.getElementById('f-notes')?.value || '';
+  S.fd.agreed    = document.getElementById('f-agreed')?.checked || false;
+  S.fd.prevLeave = document.getElementById('f-leave')?.value || 0;
+  S.fd.prevWfh   = document.getElementById('f-wfh')?.value || 0;
+
+  if (!S.fd.name || !S.fd.email || !S.fd.office || !S.fd.role || !S.fd.days.length || !S.fd.agreed) {
+    alert('Vui lòng điền đầy đủ các trường bắt buộc và xác nhận quy định.'); return;
+  }
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true; btn.textContent = 'Đang gửi...';
+
+  try {
+    const res = await apiPost({ action: 'submit', ...S.fd });
+    if (!res.ok) { alert(res.error); btn.disabled = false; btn.textContent = 'Gửi đăng ký'; return; }
+    S.lastResult = res.data;
+    S.formStep = 'submitted';
+    renderForm();
+  } catch(e) {
+    alert('Lỗi kết nối. Vui lòng thử lại.'); btn.disabled = false; btn.textContent = 'Gửi đăng ký';
+  }
+}
+
+function resetForm() {
+  S.fd = { name:'', email:'', office:'', role:'', days:[], prevLeave:0, prevWfh:0, notes:'', agreed:false };
+  S.formStep = 'filling';
+  renderForm();
+}
+
+// ─── Admin ──────────────────────────────────────────────────────
+function renderAdminGate() {
+  if (!S.adminAuth) {
+    document.getElementById('admin-view').innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;gap:14px">
+        <p style="font-size:14px;color:var(--text2)">Đăng nhập Admin</p>
+        <div style="display:flex;gap:8px">
+          <input type="password" id="apw" placeholder="Mật khẩu" style="width:200px" onkeydown="if(event.key==='Enter')checkPw()">
+          <button onclick="checkPw()">Đăng nhập</button>
+        </div>
+      </div>`;
+  } else {
+    loadAdmin();
+  }
+}
+
+async function checkPw() {
+  const pw = document.getElementById('apw')?.value;
+  if (pw === ADMIN_SECRET) { S.adminAuth = true; loadAdmin(); }
+  else alert('Sai mật khẩu');
+}
+
+async function loadAdmin() {
+  const el = document.getElementById('admin-view');
+  el.innerHTML = '<div class="loading">Đang tải dữ liệu...</div>';
+  try {
+    const [subRes, slotRes, qRes] = await Promise.all([
+      api({ action: 'submissions', secret: ADMIN_SECRET }),
+      api({ action: 'slots' }),
+      api({ action: 'quota', secret: ADMIN_SECRET }),
+    ]);
+    renderDash(subRes.data || [], slotRes.data || {}, qRes.data || {});
+  } catch(e) {
+    el.innerHTML = '<div class="loading">Lỗi tải dữ liệu.</div>';
+  }
+}
+
+function renderDash(subs, slots, quota) {
+  const tot = subs.length;
+  const app = subs.filter(s => s.status === 'Approved').length;
+  const rej = subs.filter(s => s.status === 'Rejected').length;
+  const rate = tot ? Math.round(app/tot*100) : 0;
+
+  let slotRows = '';
+  Object.entries(slots).forEach(([o, days]) => {
+    Object.entries(days).forEach(([d, gs]) => {
+      const sm = gs.seniors, jm = gs.juniors;
+      slotRows += `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:13px">
+        <span style="min-width:110px;font-weight:500">${o} · ${d}</span>
+        <span class="badge b-ok">Sr: ${sm.approved}/${sm.max}</span>
+        <span class="badge b-if">Jr: ${jm.approved}/${jm.max}</span>
+        ${sm.remaining===0||jm.remaining===0?'<span class="badge b-no">hết slot</span>':''}</div>`;
+    });
+  });
+
+  let cfgHtml = Object.entries(quota).map(([o,c]) => `
+    <div style="margin-bottom:12px">
+      <p style="font-size:12px;font-weight:500;margin-bottom:6px">${o}</p>
+      <div style="display:flex;gap:10px">
+        <div><label style="font-size:11px;color:var(--text2);display:block;margin-bottom:2px">Tổng Senior</label>
+          <input type="number" value="${c.seniors}" min="1" style="width:72px" onchange="updateQuota('${o}','seniors',this.value)"></div>
+        <div><label style="font-size:11px;color:var(--text2);display:block;margin-bottom:2px">Tổng Jr/Trainee</label>
+          <input type="number" value="${c.juniors}" min="1" style="width:72px" onchange="updateQuota('${o}','juniors',this.value)"></div>
+      </div>
+      <p style="font-size:11px;color:var(--text2);margin-top:4px">Max/ngày → Sr: ${Math.floor(c.seniors*.5)} · Jr: ${Math.floor(c.juniors*.5)}</p>
+    </div>`).join('');
+
+  const rows = subs.map(s => `<tr>
+    <td>${s.name}</td><td>${s.office}</td>
+    <td><span class="badge b-if" style="font-size:10px">${s.role.replace(' Associate','')}</span></td>
+    <td style="font-size:12px">${Array.isArray(s.days)?s.days.join(', '):s.days}</td>
+    <td><span class="badge ${s.status==='Approved'?'b-ok':'b-no'}">${s.status}</span></td>
+    <td style="font-size:11px;color:var(--text2)">${s.reason||'—'}</td>
+    <td style="font-size:11px;color:var(--text2)">${s.ts||''}</td>
+  </tr>`).join('');
+
+  document.getElementById('admin-view').innerHTML = `
+    <div class="metrics">
+      <div class="met"><div class="ml">Tổng đăng ký</div><div class="mv">${tot}</div></div>
+      <div class="met"><div class="ml">Đã duyệt</div><div class="mv" style="color:#3B6D11">${app}</div></div>
+      <div class="met"><div class="ml">Từ chối</div><div class="mv" style="color:#A32D2D">${rej}</div></div>
+      <div class="met"><div class="ml">Tỉ lệ duyệt</div><div class="mv">${rate}%</div></div>
+    </div>
+    <div class="grid2" style="align-items:start">
+      <div class="card"><p class="stitle">Slot theo văn phòng & ngày</p>${slotRows}</div>
+      <div class="card"><p class="stitle">Cấu hình quota</p>${cfgHtml}</div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <p class="stitle" style="margin:0">Danh sách đăng ký</p>
+        <div style="display:flex;gap:8px">
+          <button onclick="loadAdmin()">↻ Refresh</button>
+          <button onclick="exportCSV(${JSON.stringify(subs).replace(/</g,'&lt;')})">Export CSV</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>Họ tên</th><th>VP</th><th>Cấp</th>
+            <th>Ngày</th><th style="width:85px">Trạng thái</th>
+            <th>Lý do</th><th style="width:65px">Giờ</th>
+          </tr></thead>
+          <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:20px">Chưa có đăng ký nào</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+async function updateQuota(office, field, value) {
+  // Read current values, update one field, save
+  const res = await api({ action: 'quota', secret: ADMIN_SECRET });
+  if (!res.ok) return;
+  const cfg = res.data;
+  cfg[office] = cfg[office] || { seniors: 0, juniors: 0 };
+  cfg[office][field] = Number(value);
+  await apiPost({ action: 'setQuota', secret: ADMIN_SECRET, office, ...cfg[office] });
+}
+
+function exportCSV(subs) {
+  const h = ['Họ tên','Email','Văn phòng','Cấp bậc','Ngày','Nghỉ Tết','WFH Tết','Trạng thái','Lý do','Thời gian'];
+  const r = subs.map(s => [s.name, s.email, s.office, s.role,
+    Array.isArray(s.days)?s.days.join('|'):s.days,
+    s.prevLeave, s.prevWfh, s.status, s.reason, s.ts]);
+  const csv = [h, ...r].map(row => row.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff'+csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = `AMT_Leave_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// Init
+renderForm();
+</script>
+</body>
+</html>
